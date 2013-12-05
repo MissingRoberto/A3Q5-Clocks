@@ -1,6 +1,5 @@
 package de.uni_stuttgart.ipvs.ids.clocks.lamport;
 
-import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetSocketAddress;
 import java.util.Set;
@@ -15,7 +14,9 @@ public class TimeSender implements Runnable {
 	private Set<InetSocketAddress> neighbourSet;
 	private final static long delta = 1000;
 
-	// private final static double maximal_drift_rate;
+	private final static double maximal_drift_rate = 0.17;
+
+	private final static long tau = (long) (((double) delta) / (maximal_drift_rate * 2 * 2));
 
 	public TimeSender(Clock clock, VSDatagramSocket socket,
 			Set<InetSocketAddress> neighbourSet) {
@@ -40,7 +41,7 @@ public class TimeSender implements Runnable {
 					senderSocket.send(sp);
 
 				}
-				Thread.sleep(delta);
+				Thread.sleep(tau);
 
 			} catch (Exception e) {
 				// TODO Auto-generated catch block

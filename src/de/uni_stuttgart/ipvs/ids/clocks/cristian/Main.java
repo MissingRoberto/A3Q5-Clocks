@@ -36,18 +36,6 @@ public class Main {
 		new Thread(p_3, "TimeClient P3").start();
 		new Thread(p_4, "TimeClient P4").start();
 		
-		
-		// TOTEMTELEKO
-		long max_skew = 1000; 
-		while(true){
-			
-			try {
-				Thread.sleep(1500);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
 	}
 	
 	

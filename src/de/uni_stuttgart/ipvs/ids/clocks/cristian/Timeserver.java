@@ -2,7 +2,6 @@ package de.uni_stuttgart.ipvs.ids.clocks.cristian;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 
 import de.uni_stuttgart.ipvs.ids.clocks.Clock;

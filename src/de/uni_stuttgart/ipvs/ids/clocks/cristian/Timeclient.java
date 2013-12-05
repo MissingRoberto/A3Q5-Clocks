@@ -10,9 +10,12 @@ public class Timeclient implements Runnable {
 	private Clock clock;
 	private VSDatagramSocket clientSocket;
 	private String name;
-	private final static long delta = 5000;
 
-	//private final static double maximal_drift_rate;
+	private final static long delta = 1000;
+
+	private final static double maximal_drift_rate = 0.17;
+
+	private final static long tau = (long) (((double) delta) / (maximal_drift_rate * 2));
 
 	InetSocketAddress server_address = new InetSocketAddress("localhost", 4000);
 
@@ -20,6 +23,7 @@ public class Timeclient implements Runnable {
 		this.clock = clock;
 		clientSocket = new VSDatagramSocket(address);
 		this.name = name;
+		System.out.println(tau);
 	}
 
 	public void run() {
@@ -39,22 +43,25 @@ public class Timeclient implements Runnable {
 				DatagramPacket rp = new DatagramPacket(receiveData,
 						receiveData.length);
 
-				long to = clock.getTime();
+				long t0 = clock.getTime();
 				clientSocket.receive(rp);
-
 				long cm = new Long((new String(rp.getData()).trim()));
-
 				long t1 = clock.getTime();
-
-				long delay = (t1 - to) / 2;
+				long delay = (t1 - t0) / 2;
 				long currenttime = cm + delay;
 
-				clock.setTime(currenttime);
+				// Check the velocity of the clock. If it is faster we set t0.
+
+				if (clock.getTime() <= cm) {
+					clock.setTime(currenttime);
+				} else {
+					clock.setTime(t0);
+				}
 
 				System.out.println("clock " + name + " " + currenttime
 						+ " delay " + delay);
-				
-				Thread.sleep(delta);
+
+				Thread.sleep(tau);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
